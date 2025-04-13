@@ -1,0 +1,49 @@
+#As part of my new book, tentatively titled "Make: Getting  Started with Circuit Playground Express", one neat trick is writing sensor values to a file on the built-in flash file system. If the values are written as a text file in Comma Separated Values (CSV) format, nearly any word processor or spreadsheet program can read the file.
+
+#The Circuit Python code for reading the onboard temperature and light intensity sensors - feel free to change the readings to other sensors like the accelerometer. Name the file code.py
+
+# Read Temperature and Light Intensity, output as a CSV file
+# Mike Barela for Getting Started with Circuit Playground Express
+# 2018 MIT License, attribution appreciated
+
+import time
+from adafruit_circuitplayground.express import cpx
+
+# Set NeoPixel 0 to green as status of board, NeoPixel 1 to collecting data
+cpx.pixels[0] = (0, 90, 0)  # coded red, green, blue
+cpx.pixels[1] = (0, 0, 90)  # Pixel 1 blue when collecting data
+
+num_readings = 10  # set to any finite value you want
+
+# we try to open/create the file for append access and write the 
+#    heading line. If an error occurs, go to except statement
+try: 
+    with open("/temp-light.csv", "a") as fp:
+        fp.write('Temperature, Light Intensity\n')  # headings
+        for x in range(0, num_readings):  
+            temp = cpx.temperature
+            # do the C-to-F conversion here if you would like
+            fp.write(str(temp) + "," + str(cpx.light) + "\n")
+            # Change the value of sleep time below in seconds
+            # 1 minute=60 sec, 5 mins=300 sec, 1 hour=3600 sec, etc.
+            time.sleep(1)
+            if cpx.button_a:
+                break
+        # Done, set NeoPixel 1 to green also
+        cpx.pixels[1] = (0, 90, 0)
+
+except OSError as e:
+    # set NeoPixel 1 off and blink NeoPixel 0 (status) depending on 
+    #    the OS error
+    cpx.pixels[1] = (0, 0, 0)           # Blank NeoPixel 1
+    message_color = (99, 0, 0)          # Red for generic problem
+    if e.args[0] == 28:                 # Device out of space
+        message_color = (228, 160, 40)  # set to Orange
+    elif e.args[0] == 30:               # Device is read only
+        message_color = (181,  90,  0)  # set to Yellow
+    for x in range(1, 10):              # Flash message 10 seconds
+        cpx.pixels[0] = message_color
+        time.sleep(1)
+        cpx.pixels[0] = (0, 0, 0)
+        time.sleep(1)
+        
