@@ -1,0 +1,32 @@
+#The filesystem normally is locked for writing unless specially set up at board boot. You can do this by placing the following file in the flash filesystem as boot.py
+
+# boot.py
+# Set Circuit Playground Express flash chip to program writeable 
+#   If toggle switch is right, 
+#      flash is program writeable and file access is frozen
+#   If toggle switch is left,
+#      flash chip file access ok, file writes give an error
+# via Dan Conley 
+#   https://learn.adafruit.com/cpu-temperature-logging-with-circuit-python/
+#   writing-to-the-filesystem
+# 2018 Mike Barela for Getting Started with Circuit Playground Express
+
+import storage
+from adafruit_circuitplayground.express import cpx
+
+storage.remount("/", cpx.switch)
+
+#This sets the Circuit Playground Express slide switch to control if a program can write to flash or not.
+
+#Running the program without setting the slide switch to the right side results in a yellow NeoPixel.
+
+#Running the program with the slide switch on the other side the code should show a green and blue NeoPixel. When the data collection is complete, you will get two green NeoPixels. Slide the switch back, press the Reset button to reboot and open the CIRCUITPY drive on your computer file explorer. The file temp-light.csv should be there with the readings. If you run the program multiple times, it appends the results with headings on each run. With my system, I have MS Office installed and Windows correctly shows the CSV file as openable by default with Excel. You may have to expand the default column widths but otherwise the data is spot on.
+
+#More detail will be in the book out later this year. This is enough to help you if you have not got the tricks it takes to write to the filesystem.
+
+#Thanks to Dan Halbert for some Python file wizardry and Dan Conley for his tutorial on https://learn.adafruit.com. 
+
+import storage
+from adafruit_circuitplayground.express import cpx
+
+storage.remount("/", cpx.switch)
