@@ -25,9 +25,11 @@ from analogio import AnalogIn
 analog_in = AnalogIn(board.A1)
 
 def get_voltage(pin):
-    return (pin.value * 3.3) / 65536
-
-soil_moisture_level = round(get_voltage(analog_in), 3)
+    value = (pin.value * 3.3) / 65536
+    value100 = value * 100
+    return value100    
+    
+soil_moisture_level = int(round(get_voltage(analog_in)))
 print(soil_moisture_level, "= moisture level")
 dhtDevice = adafruit_dht.DHT22(board.GP15) #sensor device                                                                                                                             
 temperature_c = dhtDevice.temperature  #gets temperature from sensor device
@@ -38,10 +40,10 @@ print("Temp: {:.1f} F / {:.1f} C    Humidity: {}% ".format(temperature_f, temper
 
 
 ADAFRUIT_AIO_USERNAME = "CuthbertB"  # adafruit username
-ADAFRUIT_AIO_KEY      = ""  #adafruit key
+ADAFRUIT_AIO_KEY      = "aio_QbBX91bmeP5wJMjECvmnoF3Dot"  #adafruit key
 
 aio_username = "CuthbertB"
-aio_key = "aio_oBRJ96vaDyheQ4P0goVvwUluX9dt"
+aio_key = "aio_QbBX91bmeP5wJMjECvmnoF3Dot"
 feed_io = "https://io.adafruit.com/api/v2/CuthbertB/feeds/temp2w"
 
 def connected(client, userdata, flags, rc):
@@ -83,9 +85,9 @@ print("connected to io")
 
 try:
 # get feed
-    feed_temp = aio_username + "/feeds/temp2w"
-    feed_humid = aio_username + "/feeds/humid2w"
-    feed_soil = aio_username + "/feeds/soil-m"
+    feed_temp = aio_username + "/feeds/temperature-c"
+    feed_humid = aio_username + "/feeds/humidity-pw2"
+    feed_soil = aio_username + "/feeds/soil-m2"
     print("connected to temp2w")
 except AdafruitIO_RequestError:
     print("error")
@@ -114,21 +116,21 @@ while True:
             temperature_c = dhtDevice.temperature
             temperature_f = temperature_c * (9 / 5) + 32
             humidity = dhtDevice.humidity
-            soil_moisture_level = round(get_voltage(analog_in), 3)
+            soil_moisture_level = int(round(get_voltage(analog_in)))
             print("Temp: {:.1f} F / {:.1f} C    Humidity: {}% ".format(temperature_f, temperature_c, humidity)
             )
             mqtt_client.connect()       
             mqtt_client.publish(feed_name1, humidity) #poublishes to adafruit feed
             mqtt_client.publish(feed_names, temperature_c)
             mqtt_client.publish(feed_name2, soil_moisture_level)
-            soil_moisture_level = round(get_voltage(analog_in), 3)
+            soil_moisture_level = int(round(get_voltage(analog_in)))
             print("Sent")
             time.sleep(150)
             #  read sensor
             temperature_c = dhtDevice.temperature
             temperature_f = temperature_c * (9 / 5) + 32
             humidity = dhtDevice.humidity
-            soil_moisture_level = round(get_voltage(analog_in), 3)
+            soil_moisture_level = int(round(get_voltage(analog_in)))
             print("Temp: {:.1f} F / {:.1f} C    Humidity: {}% ".format(temperature_f, temperature_c, humidity)
             )
             mqtt_client.connect()
@@ -148,7 +150,7 @@ while True:
             temperature_c = dhtDevice.temperature
             temperature_f = temperature_c * (9 / 5) + 32
             humidity = dhtDevice.humidity
-            soil_moisture_level = round(get_voltage(analog_in), 3)
+            soil_moisture_level = int(round(get_voltage(analog_in)))
             print("Temp: {:.1f} F / {:.1f} C    Humidity: {}% ".format(temperature_f, temperature_c, humidity)
             )
             mqtt_client.connect()
