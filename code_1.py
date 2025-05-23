@@ -39,12 +39,12 @@ print("Temp: {:.1f} F / {:.1f} C    Humidity: {}% ".format(temperature_f, temper
 )             # prints temperature and humidity                                                  
 
 
-ADAFRUIT_AIO_USERNAME = "CuthbertB"  # adafruit username
-ADAFRUIT_AIO_KEY      = "aio_QbBX91bmeP5wJMjECvmnoF3Dot"  #adafruit key
+ADAFRUIT_AIO_USERNAME = "****"  # adafruit username
+ADAFRUIT_AIO_KEY      = "*****"  #adafruit key
 
-aio_username = "CuthbertB"
-aio_key = "aio_QbBX91bmeP5wJMjECvmnoF3Dot"
-feed_io = "https://io.adafruit.com/api/v2/CuthbertB/feeds/temp2w"
+aio_username = "*****"
+aio_key = "*****"
+feed_io = "*****"
 
 def connected(client, userdata, flags, rc):
     print("Connected to Adafruit IO")
